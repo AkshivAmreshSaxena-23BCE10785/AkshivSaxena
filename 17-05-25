@@ -1,0 +1,35 @@
+show databases;
+create dAtABAse VIT;
+show tables from vit;
+use vit;
+create table IT(
+s_id int,
+s_name varchar(40),
+s_mark int
+);
+create table CSE(
+s_id int,
+s_name varchar(40),
+s_mark int
+);
+create table faculty(
+s_id int,
+s_name varchar(40),
+s_mark int
+);
+create table Dean(
+s_id int,
+s_name varchar(40),
+s_mark int,
+s_department varchar(40)
+);
+alter table faculty drop column s_name;
+alter table faculty add ( s_name varchar(50) default 'RAM');
+show tables from vit;
+select * from IT;
+select * from cse;
+select * from faculty;
+insert into faculty values (103,'DRK',49); 
+alter table faculty drop column s_name;
+alter table faculty add ( s_name varchar(50) default 'RAM');
+update faculty set s_marks=100 where s_name='ram';
