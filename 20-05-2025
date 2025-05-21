@@ -1,0 +1,33 @@
+DROP DATABASE IF EXISTS Tuesday;
+
+CREATE DATABASE Tuesday;
+USE Tuesday;
+
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS category;
+
+CREATE TABLE category (
+    c_id INT PRIMARY KEY,
+    c_name VARCHAR(25) UNIQUE,
+    c_details VARCHAR(25)
+);
+
+INSERT INTO category VALUES (101, 'electronics', 'abcd');
+INSERT INTO category VALUES (102, 'appliances', 'abcdef');
+
+SELECT * FROM category;
+
+CREATE TABLE products (
+    p_id INT PRIMARY KEY,
+    p_name VARCHAR(25) UNIQUE,
+    p_details VARCHAR(35),
+    c_id INT,
+    FOREIGN KEY (c_id) REFERENCES category(c_id)
+        ON UPDATE CASCADE
+);
+
+DESCRIBE products;
+
+INSERT INTO products VALUES (501, 'iphone 16', '8GB ram', 101);
+
+SELECT * FROM products;
