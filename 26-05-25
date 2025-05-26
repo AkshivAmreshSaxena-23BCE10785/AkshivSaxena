@@ -1,0 +1,132 @@
+package curd_operation;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Scanner;
+
+public class CurdIO {
+
+    public static void main(String[] args) {
+        CurdIO objTest = new CurdIO();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Student ID: ");
+        int s_id = scanner.nextInt();
+        scanner.nextLine(); // Consume newline left-over
+
+        System.out.print("Enter Student Name: ");
+        String s_name = scanner.nextLine();
+
+        System.out.print("Enter Student Mark: ");
+        int s_mark = scanner.nextInt();
+
+        objTest.create_data(s_id, s_name, s_mark);
+        objTest.read_data();
+        objTest.update_data(s_id,s_name,s_mark);
+        objTest.delete_data(s_id);
+        objTest.alter_add_column();
+        scanner.close(); // Close the scanner
+    }
+
+    public void create_data(int s_id, String s_name, int s_mark) {
+        dbcon obj_DB_Connection = new dbcon();
+        Connection connection = obj_DB_Connection.get_connection();
+        PreparedStatement ps = null;
+        try {
+            String query = "INSERT INTO CSE VALUES (?, ?, ?)";
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, s_id);
+            ps.setString(2, s_name);
+            ps.setInt(3, s_mark);
+            System.out.println(ps);
+            ps.executeUpdate();
+            System.out.println("Data inserted successfully!");
+        } catch (Exception e) {
+            System.out.println("Error inserting data: " + e.getMessage());
+        }
+    }
+    public void read_data() {
+        dbcon obj_DB_Connection = new dbcon();
+        Connection connection = obj_DB_Connection.get_connection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            String query = "SELECT * FROM student";
+            ps = connection.prepareStatement(query);
+            System.out.println(ps);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                System.out.println("SID   : " + rs.getInt(1));
+                System.out.println("Name  : " + rs.getString(2));
+                System.out.println("Marks : " + rs.getInt(3));
+                System.out.println("--------------------------");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    public void update_data(int s_id, String new_name, int new_marks) {
+        dbcon obj_DB_Connection = new dbcon();
+        Connection connection = obj_DB_Connection.get_connection();
+        PreparedStatement ps = null;
+
+        try {
+            String query = "UPDATE CSE SET s_name = ?, s_marks = ? WHERE s_id = ?";
+            ps = connection.prepareStatement(query);
+            ps.setString(1, new_name);
+            ps.setInt(2, new_marks);
+            ps.setInt(3, s_id);
+
+            System.out.println(ps);  // Optional: for debugging
+            ps.executeUpdate();
+
+            System.out.println("Record updated successfully!");
+
+        } catch (Exception e) {
+            System.out.println("Error updating data: " + e.getMessage());
+        }
+    }
+    public void delete_data(int s_id) {
+        dbcon obj_DB_Connection = new dbcon();
+        Connection connection = obj_DB_Connection.get_connection();
+        PreparedStatement ps = null;
+
+        try {
+            String query = "DELETE FROM CSE WHERE s_id = ?";
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, s_id);
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Record with ID " + s_id + " deleted successfully.");
+            } else {
+                System.out.println("No record found with ID " + s_id);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error deleting data: " + e.getMessage());
+        }
+    }
+    public void alter_add_column() {
+        dbcon obj_DB_Connection = new dbcon();
+        Connection connection = obj_DB_Connection.get_connection();
+        PreparedStatement ps = null;
+
+        try {
+            String query = "ALTER TABLE CSE ADD s_grade VARCHAR(2)";
+            ps = connection.prepareStatement(query);
+            ps.executeUpdate();
+            System.out.println("Column 's_grade' added successfully.");
+        } catch (Exception e) {
+            System.out.println("Error in ALTER TABLE: " + e.getMessage());
+        }
+    }
+    
+
+
+    
+}
